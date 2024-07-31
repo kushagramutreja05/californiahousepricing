@@ -33,7 +33,9 @@ y=dataset['price']
 print(dataset.isnull())
 print(dataset.corr())
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
 scaler=StandardScaler()
+
 x_train=scaler.fit_transform(x_train)
 x_test=scaler.transform(x_test)
 model = LinearRegression()
@@ -62,10 +64,10 @@ new_data=scaler.transform(df.data[0].reshape(1,-1))
 print (model.predict(new_data))
 
 pickle.dump(model,open('lmodel.pkl','wb'))
+#pickle.dumps(scaler,open('scaling.pkl','wb'))
 
-
-loaded_model = pickle.load(open('lmodel.pkl', 'rb'))
-new=loaded_model.predict(scaler.transform(df.data[1].reshape(1,-1)))
-print (model.predict(new))
+#loaded_model = pickle.load(open('lmodel.pkl', 'rb'))
+#new=loaded_model.predict(scaler.transform(df.data[1].reshape(1,-1)))
+#print (model.predict(new))
 
 
