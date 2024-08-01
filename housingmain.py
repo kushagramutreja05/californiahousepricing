@@ -60,14 +60,11 @@ print(np.sqrt(mean_squared_error(y_test,y_pred)))
 score=r2_score(y_test,y_pred)
 print(score)
 df.data[0].reshape(1,-1)
-new_data=scaler.transform(df.data[0].reshape(1,-1))
+new_data=scaler.transform(df.data[1].reshape(1,-1))
 print (model.predict(new_data))
 
 pickle.dump(model,open('lmodel.pkl','wb'))
-#pickle.dumps(scaler,open('scaling.pkl','wb'))
+pickle.dump(scaler, open('scaler.pkl', 'wb'))
 
-#loaded_model = pickle.load(open('lmodel.pkl', 'rb'))
-#new=loaded_model.predict(scaler.transform(df.data[1].reshape(1,-1)))
-#print (model.predict(new))
 
 

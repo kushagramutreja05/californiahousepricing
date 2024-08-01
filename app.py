@@ -1,31 +1,34 @@
 import pickle
-from flask import Flask,request,app,jsonify,url_for,render_template
+from flask import Flask, request, jsonify, render_template
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-scaler=StandardScaler()
-app=Flask(__name__)
-lmodel=pickle.load(open('lmodel.pkl','rb'))
-#scaler=pickle.load(open('scaling.pkl','rb'))
+
+app = Flask(__name__)
+
+# Load the model and the scaler
+lmodel = pickle.load(open('lmodel.pkl', 'rb'))
+scaler = pickle.load(open('scaler.pkl', 'rb'))
+
 @app.route('/')
 def home():
     return render_template('home.html')
-@app.route('/predict_api',methods=['POST'])
+
+@app.route('/predict_api', methods=['POST'])
 def predict_api():
-    data=request.json['data']
+    data = request.json['data']
     print(data)
-    print(np.array(list(data.values())).reshape(1,-1))
-    new_data=scaler.transform.fit_transform(np.array(list(data.values())).reshape(1,-1))
-    output=lmodel.predict(new_data)
+    new_data = scaler.transform(np.array(list(data.values())).reshape(1, -1))
+    output = lmodel.predict(new_data)
     return jsonify(output[0])
-@app.route('/predict',methods=['POST'])
+
+@app.route('/predict', methods=['POST'])
 def predict():
-    data=[float(x) for x in request.form.values()]
-    final_input=scaler.fit_transform(np.array(data).reshape(1,-1))
+    data = [float(x) for x in request.form.values()]
+    final_input = scaler.transform(np.array(data).reshape(1, -1))
     print(final_input)
-    output=lmodel.predict(final_input)[0]
-    return render_template("home.html",prediction_text="The House price prediction is {}".format(output))
+    output = lmodel.predict(final_input)[0]
+    return render_template("home.html", prediction_text="The House price prediction is {}".format(output))
 
-
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(debug=True)
